@@ -1,16 +1,11 @@
 package es.jpv.android.examples.collapsibleheaderexample;
 
-import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.FrameLayout;
+import android.widget.Toast;
 
 
-public class MainActivity extends AppCompatActivity
-    implements RecyclerViewFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +13,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            RecyclerViewFragment fragment = RecyclerViewFragment.newInstance();
+            SelectionFragment fragment = SelectionFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragmentContainer, fragment, "theFragment")
                     .commit();
@@ -26,29 +21,44 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void onFragmentInteraction(FragmentEnum sourceFragment, Bundle data) {
+        switch (sourceFragment) {
+            case SELECTION:
+                loadFragment(data.getInt("selectedFragment"));
+                break;
+            case RECYCLERVIEW:
+                Toast.makeText(
+                        this,
+                        "You've interacted with RecyclerViewFragment",
+                        Toast.LENGTH_SHORT).show();
+                break;
+            case PARALLAX:
+                Toast.makeText(
+                        this,
+                        "You've interacted with ParallaxFragment",
+                        Toast.LENGTH_SHORT).show();
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        //Do nothing right now
+    private void loadFragment(int fragmentOrdinal) {
+        switch (fragmentOrdinal) {
+            case 1:
+                RecyclerViewFragment fragmentRV = RecyclerViewFragment.newInstance();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, fragmentRV, "theFragment")
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case 2:
+                ParallaxToolbarFragment fragmentParallax = ParallaxToolbarFragment.newInstance();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, fragmentParallax, "theFragment")
+                        .addToBackStack(null)
+                        .commit();
+                break;
+
+        }
     }
 }

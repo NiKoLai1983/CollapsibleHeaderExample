@@ -1,8 +1,9 @@
 package es.jpv.android.examples.collapsibleheaderexample;
 
+
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,10 +16,10 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RecyclerViewFragment#newInstance} factory method to
+ * Use the {@link ParallaxToolbarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecyclerViewFragment extends Fragment {
+public class ParallaxToolbarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
@@ -26,13 +27,13 @@ public class RecyclerViewFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment RecyclerViewFragment.
+     * @return A new instance of fragment ParallaxToolbarFragment.
      */
-    public static RecyclerViewFragment newInstance() {
-        return new RecyclerViewFragment();
+    public static ParallaxToolbarFragment newInstance() {
+        return new ParallaxToolbarFragment();
     }
 
-    public RecyclerViewFragment() {
+    public ParallaxToolbarFragment() {
         // Required empty public constructor
     }
 
@@ -44,10 +45,17 @@ public class RecyclerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_parallax_toolbar, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout)
+                view.findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(
+                getResources().getString(R.string.selectionButton_ParallaxFragment)
+        );
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -57,6 +65,12 @@ public class RecyclerViewFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Called when a fragment is first attached to its activity.
+     * {@link #onCreate(Bundle)} will be called after this.
+     *
+     * @param activity Invoker activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -68,10 +82,13 @@ public class RecyclerViewFragment extends Fragment {
         }
     }
 
+    /**
+     * Called when the fragment is no longer attached to its activity.  This
+     * is called after {@link #onDestroy()}.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
-
 }
